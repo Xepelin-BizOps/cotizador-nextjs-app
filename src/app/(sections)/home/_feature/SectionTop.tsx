@@ -24,21 +24,21 @@ export default async function SectionTop() {
             <div className="my-10 flex justify-center items-center gap-5 flex-wrap">
               <CardData
                 title={response.data[0].label || "Total Cotizaciones"}
-                amount={`$${response.data[0].value || "$0"}`}
+                amount={`${response.data[0].value || "$0"}`}
                 percentage={response.data[0].change || ""}
                 currency={response.data[0].currency || "MXN"}
                 // loading={response.isLoading}
               />
               <CardData
                 title={response.data[1].label || "Total Vendido"}
-                amount={`$${response.data[1].value || "$0"}`}
+                amount={`${response.data[1].value || "$0"}`}
                 percentage={response.data[1].change || ""}
                 currency={response.data[1].currency || "MXN"}
                 // loading={response.isLoading}
               />
               <CardData
                 title={response.data[2].label || "Por Cobrar"}
-                amount={`$${response.data[2].value || "$0"}`}
+                amount={`${response.data[2].value || "$0"}`}
                 percentage={response.data[2].change || ""}
                 currency={response.data[2].currency || "MXN"}
                 // loading={response.isLoading}
