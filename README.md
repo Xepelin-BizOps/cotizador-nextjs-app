@@ -15,12 +15,43 @@ docker build -t cotizador-app .
 ### 2. Ejecutar la imagen con PostgreSQL externa
 
 ```bash
-docker run -p 3000:3000 \
+docker run -d --name cotizador-app \
+  -p 3000:3000 \
   -e DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DBNAME?sslmode=require" \
+  -e NODE_ENV=production \
+  -e JWT_SECRET=secreto_jwt \
+  -e NEXT_PUBLIC_ALLOWED_ORIGINS=https://dominio.com \
   cotizador-app
+
 ```
 
 La app estará disponible en: http://localhost:3000
+
+### 🛠 Preparación de la base de datos
+
+1. Aplicar migraciones:
+
+```bash
+docker exec -it cotizador-app npx prisma migrate deploy
+```
+
+2. Cargar datos iniciales (monedas, categorías y compañías que se van a usar en la app):
+
+```bash
+docker exec -it cotizador-app npm run seed
+```
+
+⚠️ El seed no se ejecuta automáticamente para evitar duplicados. Ejecútalo solo la primera vez o cuando sea necesario.
+
+# Consideraciones
+
+Antes de cargar compañías, la base de datos debe contener monedas y categorías de producto.
+
+Ajusta los archivos:
+
+- prisma/seedCategoriesAndCurrencies.ts → para definir monedas y categorías.
+
+- prisma/seedCompanies.ts → para definir compañías.
 
 ---
 
