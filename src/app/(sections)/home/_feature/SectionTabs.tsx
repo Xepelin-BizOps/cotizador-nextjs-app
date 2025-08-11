@@ -62,7 +62,7 @@ export default function SectionTabs({
       children:
         quotes.success === null ? (
           <SkeletonTabList />
-        ) : quotes.success && quotes.data.length > 0 ? (
+        ) : quotes.success && quotes.data ? (
           <QuotesList
             data={quotes.data}
             totalItem={quotes.total}
@@ -79,7 +79,7 @@ export default function SectionTabs({
       children:
         clients.success === null ? (
           <SkeletonTabList />
-        ) : clients.success && clients.data.length > 0 ? (
+        ) : clients.success && clients.data ? (
           <ClientList data={clients.data} totalItems={clients.total} />
         ) : (
           <ErrorState message={clients.message} redirectPath="/auth" />
@@ -91,7 +91,7 @@ export default function SectionTabs({
       children:
         products.success === null ? (
           <SkeletonTabList />
-        ) : products.success && products.data.length > 0 ? (
+        ) : products.success && products.data ? (
           <ProductList data={products.data} totalItems={products.total} />
         ) : (
           <ErrorState message={products.message} redirectPath="/auth" />
