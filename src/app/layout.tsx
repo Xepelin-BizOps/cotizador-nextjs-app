@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { ConfigProvider } from "antd";
 import "@ant-design/v5-patch-for-react-19";
 import "./globals.css";
-import { themeConfigAnt } from "./themeConfigAnt";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Cotizador",
-  description: "Generated next app",
+  description: "¡Hace cotizaciones para tus clientes!",
 };
 
 export default function RootLayout({
@@ -31,9 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ConfigProvider theme={themeConfigAnt}>
+        <Providers>
           <AntdRegistry>{children}</AntdRegistry>
-        </ConfigProvider>
+        </Providers>
       </body>
     </html>
   );
