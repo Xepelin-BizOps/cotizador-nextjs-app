@@ -94,7 +94,7 @@ export default function ProductList({ data, totalItems }: Props) {
           }
         />
 
-        <h2 className="text-lg font-semibold">Catálogo de Productos</h2>
+        <h2 className="text-lg font-semibold">Catálogo</h2>
 
         <div className="flex justify-between items-center gap-2 ">
           <div
