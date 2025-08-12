@@ -158,7 +158,6 @@ export const createQuote = async (data: CreateQuoteDto) => {
         const parsed = createQuotationSchema.safeParse(data)
 
         if (!parsed.success) {
-            console.log(parsed)
             return {
                 success: false,
                 message: 'Datos inválidos',

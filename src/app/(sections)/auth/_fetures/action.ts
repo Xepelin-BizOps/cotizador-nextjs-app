@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 export const login = async (businessIdentifier: string, userEmail: string) => {
-    console.log(businessIdentifier, userEmail)
 
     // Buscar empresa con usuarios
     const company = await prisma.company.findUnique({
@@ -14,14 +13,12 @@ export const login = async (businessIdentifier: string, userEmail: string) => {
         include: { users: true, currency: true },
     });
 
-    console.log("company found", company)
     if (!company) return {
         error: true,
         message: "No existe esta compañía"
     };
 
     const user = company.users.find(u => u.email === userEmail);
-    console.log("user Found", user)
     if (!user) return {
         error: true,
         message: "Usuario no registrado en esta compañía"

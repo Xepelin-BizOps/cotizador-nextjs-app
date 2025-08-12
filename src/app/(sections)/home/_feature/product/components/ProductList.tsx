@@ -118,7 +118,7 @@ export default function ProductList({ data, totalItems }: Props) {
             onClick={() =>
               handleOpenModal(
                 "Agregar Nuevo Producto",
-                <ProductForm onCloseModal={handleCloseModal} />
+                <ProductForm onCloseModal={handleCloseModal} isEdit={false} />
               )
             }
           >

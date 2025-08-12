@@ -9,6 +9,7 @@ export const themeConfigAnt: ThemeConfig = {
         colorPrimaryActive: '#494bd4',
         colorPrimaryTextHover: '#555eee',
         colorBgSpotlight: '#555eee', // Fondo del tooltip,
+        borderRadius: 10
     },
     components: {
         Spin: {

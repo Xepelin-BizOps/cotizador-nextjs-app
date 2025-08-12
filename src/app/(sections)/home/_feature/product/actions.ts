@@ -92,7 +92,7 @@ export const createProduct = async (data: CreateProductDto) => {
             }
         }
 
-        const response = await prisma.product.create({
+        await prisma.product.create({
             data: {
                 ...parsed.data,
                 price: Number(parsed.data.price),
@@ -102,7 +102,6 @@ export const createProduct = async (data: CreateProductDto) => {
             },
         })
 
-        console.log(response)
 
         // Revalidar la ruta que muestra los productos, asi actuliza la lista
         revalidatePath(`/home?tab=${TabName.product}`)

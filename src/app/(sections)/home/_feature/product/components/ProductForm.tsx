@@ -22,8 +22,11 @@ interface Props {
   dataEdit?: EditProductDto;
 }
 
-export default function ProductForm({ onCloseModal, dataEdit, isEdit }: Props) {
-  console.log({ dataEdit });
+export default function ProductForm({
+  onCloseModal,
+  dataEdit,
+  isEdit = false,
+}: Props) {
   const [form] = Form.useForm();
 
   const authContext = useAuthContext();
@@ -37,7 +40,7 @@ export default function ProductForm({ onCloseModal, dataEdit, isEdit }: Props) {
     getCategories().then((data) =>
       setCategories(transformToSelectOptions(data || []))
     );
-  });
+  }, []);
 
   // Seteo la data para el edit cuando existe
   useEffect(() => {
@@ -53,7 +56,6 @@ export default function ProductForm({ onCloseModal, dataEdit, isEdit }: Props) {
   const { contextHolder, showToast } = useToast();
 
   const onSubmitData = async (dataForm: CreateProductDto | EditProductDto) => {
-    console.log({ dataForm });
     setIsLoading(true);
 
     const response = isEdit
@@ -79,7 +81,7 @@ export default function ProductForm({ onCloseModal, dataEdit, isEdit }: Props) {
         layout="vertical"
         onFinish={onSubmitData}
         initialValues={{
-          currencyId: authContext.value.currency.id,
+          currencyId: authContext.value.currency.id.toString(),
           companyId: authContext.value.companyId,
         }}
       >

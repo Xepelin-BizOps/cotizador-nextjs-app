@@ -36,8 +36,6 @@ export default function QuoteForm({
   optionsProducts,
   optionsClients,
 }: Props) {
-  console.log(dataEdit);
-
   const authContext = useAuthContext();
   const [form] = Form.useForm<CreateQuoteDto>();
   const { showToast, contextHolder } = useToast();
@@ -153,8 +151,6 @@ export default function QuoteForm({
       clientId: Number(dataForm.clientId),
     };
 
-    console.log({ dataSend });
-
     const response = isEdit
       ? await editQuote(dataSend as EditQuoteDto, dataEdit?.id!)
       : await createQuote(dataSend);
@@ -173,7 +169,7 @@ export default function QuoteForm({
   return (
     <>
       {contextHolder}
-      <div className="min-h-[60vh]">
+      <div className="min-h-[60vh] p-4">
         <div className="flex justify-between items-start w-full mb-7">
           <h2 className="text-lg font-semibold ">Nueva cotización</h2>
 

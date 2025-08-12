@@ -25,6 +25,7 @@ import type {
 } from "@/schemas/client/client.dto";
 import { ClientType } from "@prisma/client";
 import type { ClientWithRelations } from "../client-types";
+import { useAuthContext } from "@/app/hooks/useAuthContext";
 
 interface Props {
   onCloseModal: () => void;
@@ -40,6 +41,7 @@ export default function ClientForm({ onCloseModal, isEdit, data }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { contextHolder, showToast } = useToast();
+  const authContext = useAuthContext();
 
   // Si llega la data lo seteo para el edit sino reset porque es un create
   useEffect(() => {
@@ -51,13 +53,11 @@ export default function ClientForm({ onCloseModal, isEdit, data }: Props) {
   }, [data, isEdit, form]);
 
   const onSubmitData = async (dataForm: CreateClientDto | EditClientDto) => {
-    console.log({ dataForm });
     setIsLoading(true);
 
     const response = isEdit
       ? await editClient(dataForm as EditClientDto, data?.id!)
       : await createClient(dataForm);
-    console.log(response);
 
     showToast({
       type: response.success ? "success" : "error",
@@ -79,7 +79,7 @@ export default function ClientForm({ onCloseModal, isEdit, data }: Props) {
         initialValues={{
           addresses: [],
           contacts: [],
-          companyId: 1,
+          companyId: authContext.value.companyId,
         }}
       >
         <Form.Item name="companyId" hidden>
