@@ -13,7 +13,6 @@ interface Props {
 }
 
 export function ProductDetails({ data, handleOpenModal, onCloseModal }: Props) {
-  console.log(data);
   return (
     <>
       <div className="space-y-6 mt-3 shadow-sm rounded-lg p-4 border border-accent-light-hover">

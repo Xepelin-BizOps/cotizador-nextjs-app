@@ -126,9 +126,7 @@ export default function QuotesList({
                   placeholder="Estado"
                   allowClear
                   options={quoteStatusOptions}
-                  // mode="multiple"
                   onChange={(value: QuotationStatus) => {
-                    // console.log(value)
                     if (value) {
                       router.replace(
                         `/home?tab=${TabName.quote}&status=${value}&page=1`

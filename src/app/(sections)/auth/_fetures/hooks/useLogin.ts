@@ -40,6 +40,7 @@ export default function useLogin() {
 
             try {
                 const responseLogin = await login(businessIdentifier, userEmail);
+                console.log(responseLogin)
 
                 if (!responseLogin.error) {
                     const responseAuthMe = await authMe();

@@ -17,7 +17,6 @@ export default function QuoteDetails({ quoteId }: Props) {
     (async () => {
       setIsLoading(true);
       const res = await getQuoteById(quoteId);
-      console.log({ res });
 
       if (res.success) {
         setData(res.data);
