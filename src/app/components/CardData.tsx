@@ -21,7 +21,7 @@ const CardData: React.FC<CardProps> = ({
     : "bg-accent-light text-accent";
 
   return (
-    <div className="w-full max-w-[14rem] min-h-[7rem] p-[1rem] bg-white border border-accent-light-active rounded-lg shadow-sm hover:shadow-md transition-shadow">
+    <div className="w-full max-w-[14rem] min-h-[7rem] p-[1rem] bg-white border border-accent-light-active rounded-xl shadow-sm hover:shadow-md transition-shadow">
       {loading ? (
         <div className="flex flex-col gap-2">
           <Skeleton.Input
