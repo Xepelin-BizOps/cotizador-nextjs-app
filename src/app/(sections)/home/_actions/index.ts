@@ -4,19 +4,28 @@ import { prisma } from '@/lib/prisma'
 import { QuotationStatus } from '@prisma/client';
 import dayjs from 'dayjs';
 import { verifyToken } from '../../auth/_fetures/action';
+import { transformToIdAndValueSelectOptions, transformToSelectOptions } from '@/utils/transformToSelectOptions';
 
 export const getCategories = async () => {
-    return prisma.category.findMany({
+
+    const cetegories = await prisma.category.findMany({
         orderBy: { name: 'asc' },
     })
+
+    return transformToSelectOptions(cetegories)
 }
 
+export async function getCurrenciesCatalog(): Promise<{ label: string, value: string }[]> {
+    const currencies = await prisma.currency.findMany({});
+
+    return transformToIdAndValueSelectOptions(currencies);
+}
 
 export async function getCompanyProductCatalog(companyId: number): Promise<{ label: string, value: number }[]> {
     const products = await prisma.product.findMany({
         where: { companyId },
         select: { id: true, name: true, sku: true, price: true },
-        //   orderBy: { name: "asc" },
+        orderBy: { name: "asc" },
     });
 
     return products.map((p) => ({
