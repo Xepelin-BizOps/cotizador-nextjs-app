@@ -3,7 +3,7 @@ import { AddressType, ClientType, ClientStatus, ProductType, QuotationStatus } f
 
 // Nombre de los tabs keys
 export const TabName = {
-    product: 'products',
+    product: 'catalogs',
     client: 'clients',
     quote: 'quotes'
 }
