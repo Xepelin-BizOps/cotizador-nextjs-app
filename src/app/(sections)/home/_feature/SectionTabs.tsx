@@ -87,7 +87,7 @@ export default function SectionTabs({
     },
     {
       key: TabName.product,
-      label: "Productos",
+      label: "Catálogos",
       children:
         products.success === null ? (
           <SkeletonTabList />
