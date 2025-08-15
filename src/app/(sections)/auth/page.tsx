@@ -2,7 +2,7 @@
 import { Alert, Button, Spin } from "antd";
 import useLogin from "./_fetures/hooks/useLogin";
 
-export default function page() {
+export default function Page() {
   // Login - PostMessage
   const { data } = useLogin();
 

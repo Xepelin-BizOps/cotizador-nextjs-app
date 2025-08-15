@@ -163,7 +163,7 @@ export default function QuotesList({
 
       {!showForm.show && (
         <div className="mt-8">
-          <TableDynamic<any>
+          <TableDynamic<PlainQuotesWithRelations>
             columns={columns}
             data={data || []}
             tableParams={{

@@ -63,7 +63,7 @@ export default function QuoteForm({
     } else {
       form.resetFields();
     }
-  }, [dataEdit, isEdit]);
+  }, [dataEdit, isEdit, form]);
 
   const addProduct = (productId: number) => {
     setItems((oldItems) => {
@@ -151,9 +151,10 @@ export default function QuoteForm({
       clientId: Number(dataForm.clientId),
     };
 
-    const response = isEdit
-      ? await editQuote(dataSend as EditQuoteDto, dataEdit?.id!)
-      : await createQuote(dataSend);
+    const response =
+      isEdit && dataEdit
+        ? await editQuote(dataSend as EditQuoteDto, dataEdit.id!)
+        : await createQuote(dataSend);
 
     showToast({
       type: response.success ? "success" : "error",
@@ -163,7 +164,7 @@ export default function QuoteForm({
     });
 
     setIsLoading(false);
-    response.success && form.resetFields();
+    if (response.success) form.resetFields();
   };
 
   return (

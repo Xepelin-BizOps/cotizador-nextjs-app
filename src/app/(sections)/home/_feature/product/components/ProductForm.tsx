@@ -58,18 +58,19 @@ export default function ProductForm({
   const onSubmitData = async (dataForm: CreateProductDto | EditProductDto) => {
     setIsLoading(true);
 
-    const response = isEdit
-      ? await editProduct(dataForm as EditProductDto, dataEdit?.id!)
-      : await createProduct(dataForm);
+    const response =
+      isEdit && dataEdit
+        ? await editProduct(dataForm as EditProductDto, dataEdit.id!)
+        : await createProduct(dataForm);
 
     showToast({
       type: response.success ? "success" : "error",
       message: response.message,
     });
 
-    response.success && form.resetFields();
+    if (response.success) form.resetFields();
     setIsLoading(false);
-    response.success && onCloseModal();
+    if (response.success) onCloseModal();
   };
 
   return (

@@ -12,7 +12,7 @@ import QuoteDetails from "../components/QuoteDetails";
 import { ToastOptions } from "@/app/hooks/useToast";
 import dayjs from "dayjs";
 import { EditQuoteDto } from "@/schemas/quote/quote.dto";
-import type { QuotesWithRelations } from "../quote-types";
+import type { PlainQuotesWithRelations } from "../quote-types";
 import { QuotationStatus } from "@prisma/client";
 import { mapQuoteListToFormValues } from "../quote-mappers";
 import { useRouter } from "next/navigation";
@@ -57,7 +57,7 @@ export function useQuotesColumns({
     },
   ];
 
-  const columns: ColumnsType<QuotesWithRelations> = [
+  const columns: ColumnsType<PlainQuotesWithRelations> = [
     {
       title: "Id",
       dataIndex: "id",

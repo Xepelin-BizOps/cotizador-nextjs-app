@@ -1,9 +1,9 @@
 import { EditQuoteDto } from "@/schemas/quote/quote.dto";
-import { QuotesWithRelations } from "./quote-types";
+import { PlainQuotesWithRelations } from "./quote-types";
 
 
 
-export const mapQuoteListToFormValues = (quote: QuotesWithRelations): EditQuoteDto => ({
+export const mapQuoteListToFormValues = (quote: PlainQuotesWithRelations): EditQuoteDto => ({
     id: quote.id,
     companyId: quote.companyId,
     clientId: quote.clientId,

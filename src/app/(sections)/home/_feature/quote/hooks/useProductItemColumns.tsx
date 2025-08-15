@@ -4,8 +4,12 @@ import type { ColumnsType } from "antd/es/table";
 import { EditQuoteItemDto } from "@/schemas/quote/quote.dto";
 
 export const useProductItemColumns = (
-  updateItem: Function,
-  removeItem: Function
+  updateItem: (
+    productId: number,
+    key: "quantity" | "unitPrice",
+    value: number
+  ) => void,
+  removeItem: (productId: number) => void
 ) => {
   const columns: ColumnsType<EditQuoteItemDto> = [
     {

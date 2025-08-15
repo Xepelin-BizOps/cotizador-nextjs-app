@@ -55,16 +55,17 @@ export default function ClientForm({ onCloseModal, isEdit, data }: Props) {
   const onSubmitData = async (dataForm: CreateClientDto | EditClientDto) => {
     setIsLoading(true);
 
-    const response = isEdit
-      ? await editClient(dataForm as EditClientDto, data?.id!)
-      : await createClient(dataForm);
+    const response =
+      isEdit && data
+        ? await editClient(dataForm as EditClientDto, data.id!)
+        : await createClient(dataForm);
 
     showToast({
       type: response.success ? "success" : "error",
       message: response.message,
     });
 
-    // form.resetFields();
+    if (response.success) form.resetFields();
     setIsLoading(false);
     onCloseModal();
   };

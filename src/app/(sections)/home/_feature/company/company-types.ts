@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-export type companyById = Prisma.CompanyGetPayload<{ include: {} }>;
+export type companyById = Prisma.CompanyGetPayload<{ include: object }>;
 
 
 export interface ResponseDetails {

@@ -63,7 +63,7 @@ export default function useLogin() {
                         message: responseLogin.message,
                     }));
                 }
-            } catch (_) {
+            } catch {
                 setData((prev) => ({
                     ...prev,
                     isLoading: false,
@@ -80,7 +80,7 @@ export default function useLogin() {
         return () => {
             window.removeEventListener("message", handleMessage);
         };
-    });
+    }, [router, setValue]);
 
     return {
         data,

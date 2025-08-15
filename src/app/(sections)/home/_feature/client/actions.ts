@@ -125,7 +125,7 @@ export async function adaptClientUpdateData(data: EditClientDto) {
     const {
         addresses,
         contacts,
-        id: clientId,
+        id: _clientId,
         ...clientData
     } = data;
 
