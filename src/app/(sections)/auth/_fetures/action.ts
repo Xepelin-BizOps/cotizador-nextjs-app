@@ -78,6 +78,17 @@ export interface ResVerify extends PayloadData {
 }
 
 export async function verifyToken() {
+    // USER TEST
+    return {
+        id: 1,
+        email: "peep@corp.com'",
+        companyId: 1,
+        currency: {
+            id: 1,
+            value: "MXN"
+        }
+    }
+
     const cookieStore = await cookies();
     const token = cookieStore.get('access_token')?.value;
 
@@ -91,6 +102,7 @@ export async function verifyToken() {
     } catch {
         throw new Error("No autorizado - token inválido");
     }
+
 }
 
 export async function authMe() {
