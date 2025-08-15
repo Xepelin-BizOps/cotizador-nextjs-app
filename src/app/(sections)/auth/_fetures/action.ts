@@ -81,7 +81,7 @@ export async function verifyToken() {
     // USER TEST
     return {
         id: 1,
-        email: "peep@corp.com'",
+        email: "peep@corp.com",
         companyId: 1,
         currency: {
             id: 1,

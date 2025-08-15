@@ -11,6 +11,7 @@ import type { PlainQuotesWithRelations } from "./quote/quote-types";
 import { TabName } from "@/app/constants/optionsSelects";
 import ErrorState from "@/app/components/ErrorState";
 import SkeletonTabList from "../../../components/SkeletonTabList";
+import { useAuthContext } from "@/app/hooks/useAuthContext";
 
 interface ListResponse<T> {
   data: T[];
@@ -38,6 +39,19 @@ export default function SectionTabs({
   searchParams,
 }: Props) {
   const router = useRouter();
+
+  const { setValue } = useAuthContext();
+
+  // TEST USER
+  setValue({
+    id: 1,
+    email: "peep@corp.com",
+    companyId: 1,
+    currency: {
+      id: 1,
+      value: "MXN",
+    },
+  });
 
   const activeTab = searchParams?.tab || TabName.quote;
 
