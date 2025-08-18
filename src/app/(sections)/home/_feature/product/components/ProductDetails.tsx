@@ -48,6 +48,10 @@ export function ProductDetails({ data, handleOpenModal, onCloseModal }: Props) {
 
         <div className="flex flex-col md:flex-row md:justify-between gap-4">
           <div>
+            <p className="text-sm text-gray-500">Moneda</p>
+            <p className="text-base font-semibold">{data.currency.value}</p>
+          </div>
+          <div>
             <p className="text-sm text-gray-500">Precio</p>
             <p className="text-base font-semibold">${data.price}</p>
           </div>

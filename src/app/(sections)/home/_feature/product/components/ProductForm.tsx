@@ -6,8 +6,8 @@ import { SaveOutlined } from "@ant-design/icons";
 import useToast from "@/app/hooks/useToast";
 import { useEffect, useState } from "react";
 import { productTypes } from "@/app/constants/optionsSelects";
-import { getCategories } from "../../../_actions";
-import { transformToSelectOptions } from "@/utils/transformToSelectOptions";
+import { getCategories, getCurrenciesCatalog } from "../../../_actions";
+import { type OptionsSelect } from "@/utils/transformToSelectOptions";
 import { requiredRule } from "@/utils/formRules";
 import { createProduct, editProduct } from "../actions";
 import type {
@@ -33,13 +33,25 @@ export default function ProductForm({
 
   const [categories, setCategories] =
     useState<{ label: string; value: string }[]>();
+  const [optionsCurrencies, setOptionsCurrencies] = useState<
+    OptionsSelect[] | []
+  >([]);
+  const [isLoadingCat, setIsLoadingCat] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // GET Categories
+  // GET Categories y currencies
   useEffect(() => {
-    getCategories().then((data) =>
-      setCategories(transformToSelectOptions(data || []))
-    );
+    (async () => {
+      setIsLoadingCat(true);
+
+      const categories = await getCategories();
+      setCategories(categories);
+
+      const currencies = await getCurrenciesCatalog();
+      setOptionsCurrencies(currencies);
+
+      setIsLoadingCat(false);
+    })();
   }, []);
 
   // Seteo la data para el edit cuando existe
@@ -82,14 +94,10 @@ export default function ProductForm({
         layout="vertical"
         onFinish={onSubmitData}
         initialValues={{
-          currencyId: authContext.value.currency.id.toString(),
           companyId: authContext.value.companyId,
         }}
       >
-        {/* Campos ocultos */}
-        <Form.Item name="currencyId" hidden>
-          <Input type="hidden" />
-        </Form.Item>
+        {/* Campo oculto */}
         <Form.Item name="companyId" hidden>
           <Input type="hidden" />
         </Form.Item>
@@ -139,7 +147,7 @@ export default function ProductForm({
             >
               <Select
                 placeholder="Seleccionar categoría"
-                // loading={isLoading}
+                loading={isLoadingCat}
                 options={categories}
               />
             </Form.Item>
@@ -154,17 +162,30 @@ export default function ProductForm({
             </Form.Item>
 
             <Form.Item
-              label="Descripción corta"
-              name="shortDescription"
-              rules={[
-                requiredRule,
-                { max: 255, message: "Máximo 255 caracteres" },
-              ]}
+              label="Tipo de moneda"
+              name="currencyId"
+              rules={[requiredRule]}
               className="w-full"
             >
-              <TextArea rows={2} placeholder="Descripción breve del ítem" />
+              <Select
+                placeholder="Seleccione la moneda"
+                loading={isLoadingCat}
+                options={optionsCurrencies}
+              />
             </Form.Item>
           </div>
+
+          <Form.Item
+            label="Descripción corta"
+            name="shortDescription"
+            rules={[
+              requiredRule,
+              { max: 255, message: "Máximo 255 caracteres" },
+            ]}
+            className="w-full"
+          >
+            <TextArea rows={2} placeholder="Descripción breve del ítem" />
+          </Form.Item>
 
           <Form.Item label="Descripción larga" name="longDescription">
             <TextArea rows={4} placeholder="Descripción detallada del ítem" />

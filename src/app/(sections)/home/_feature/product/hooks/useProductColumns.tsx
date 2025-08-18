@@ -58,7 +58,8 @@ export default function useProductColumns({
       title: "Precio",
       dataIndex: "price",
       key: "precio",
-      render: (precio: string) => `$${precio}`,
+      render: (precio: string, record) =>
+        ` $${precio} - ${record.currency.value}`,
     },
     {
       title: "Categoría",
