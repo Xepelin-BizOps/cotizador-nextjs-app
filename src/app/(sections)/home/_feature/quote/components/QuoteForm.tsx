@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, DatePicker, Form, Input, Select, Table } from "antd";
-import { CloseOutlined, SaveOutlined } from "@ant-design/icons";
+import { CloseOutlined, SaveOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { requiredRule } from "@/utils/formRules";
 import TextArea from "antd/es/input/TextArea";
 import { QuotationStatus } from "@prisma/client";
@@ -13,10 +13,20 @@ import type {
   EditQuoteDto,
   EditQuoteItemDto,
 } from "@/schemas/quote/quote.dto";
+import type { QuoteSection } from "../quote-types";
 import { createQuote, editQuote } from "../actions";
 import dayjs from "dayjs";
 import { quoteStatusOptions } from "@/app/constants/optionsSelects";
 import { useAuthContext } from "@/app/hooks/useAuthContext";
+
+const DEFAULT_SECTIONS: { key: string; title: string }[] = [
+  { key: "serviceDescription", title: "Descripción del Servicio" },
+  { key: "paymentConditions", title: "Condiciones de Pago" },
+  { key: "validityWarranty", title: "Vigencia y Garantías" },
+  { key: "paymentMethod", title: "Forma de Pago" },
+  { key: "exclusions", title: "Exclusiones" },
+  { key: "termsConditions", title: "Términos y Condiciones" },
+];
 
 interface Props {
   toggleForm: (type: "create" | "edit" | null, data?: EditQuoteDto) => void;
@@ -44,6 +54,9 @@ export default function QuoteForm({
   const [items, setItems] = useState<QuoteItemStateType[] | []>(
     dataEdit ? dataEdit.items : []
   );
+  const [sections, setSections] = useState<QuoteSection[]>(
+    dataEdit?.sections || []
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   // Si llega la data setear para el edit
@@ -60,8 +73,10 @@ export default function QuoteForm({
 
       // saco los items y me quedo con lo otro nomas
       form.setFieldsValue(preparedValues);
+      setSections(dataEdit.sections || []);
     } else {
       form.resetFields();
+      setSections([]);
     }
   }, [dataEdit, isEdit, form]);
 
@@ -118,6 +133,36 @@ export default function QuoteForm({
 
   const productItemColumns = useProductItemColumns(updateItem, removeItem);
 
+  // ----- Sections -----
+  const addSection = (key: string) => {
+    const def = DEFAULT_SECTIONS.find((s) => s.key === key);
+    if (!def) return;
+    setSections((prev) => {
+      if (prev.find((s) => s.title === def.title)) return prev;
+      return [...prev, { title: def.title, content: "" }];
+    });
+  };
+
+  const addCustomSection = () => {
+    setSections((prev) => [...prev, { title: "Nueva Sección", content: "" }]);
+  };
+
+  const updateSection = (
+    index: number,
+    key: "title" | "content",
+    value: string
+  ) => {
+    setSections((prev) => {
+      const newSections = [...prev];
+      newSections[index] = { ...newSections[index], [key]: value };
+      return newSections;
+    });
+  };
+
+  const removeSection = (index: number) => {
+    setSections((prev) => prev.filter((_, i) => i !== index));
+  };
+
   // Funcion para calcular totales
   const { ivaAmount, subtotal, total } = calculateTotals(items, 16);
 
@@ -149,6 +194,7 @@ export default function QuoteForm({
       ...dataForm,
       items: items, // Agregamos los items del state
       clientId: Number(dataForm.clientId),
+      sections: sections,
     };
 
     const response =
@@ -297,16 +343,90 @@ export default function QuoteForm({
                         scroll={{ x: "max-content" }}
                       />
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="w-full md:min-w-[18rem] lg:w-[40%] xl:w-[30%] border-l border-gray-200 bg-accent-light p-5 rounded-lg md:h-full">
-              <h3 className="font-semibold text-gray-900 mb-4">
-                Resumen Financiero
-              </h3>
-              <div className="flex flex-col gap-2 my-2">
+            <div className="mt-8">
+              <h3 className="text-lg font-semibold mb-2">Secciones</h3>
+              <div className="flex flex-col gap-2 mb-4">
+                <Select
+                  placeholder="Agregar sección"
+                  options={DEFAULT_SECTIONS.filter(
+                    (s) => !sections.find((sec) => sec.title === s.title)
+                  ).map((s) => ({ label: s.title, value: s.key }))}
+                  onSelect={(value) => addSection(String(value))}
+                  value={undefined}
+                />
+                <Button
+                  icon={<PlusOutlined />}
+                  type="dashed"
+                  onClick={addCustomSection}
+                >
+                  Agregar sección personalizada
+                </Button>
+              </div>
+
+              {sections.map((section, index) => (
+                <div
+                  key={index}
+                  className="mb-4 border border-gray-200 p-3 rounded-md"
+                >
+                  <Input
+                    className="mb-2"
+                    value={section.title}
+                    onChange={(e) =>
+                      updateSection(index, "title", e.target.value)
+                    }
+                  />
+                  <TextArea
+                    rows={3}
+                    value={section.content}
+                    onChange={(e) =>
+                      updateSection(index, "content", e.target.value)
+                    }
+                  />
+                  <Button
+                    icon={<MinusCircleOutlined />}
+                    onClick={() => removeSection(index)}
+                    className="mt-2"
+                    danger
+                  >
+                    Eliminar
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+            <div className="w-full md:min-w-[18rem] lg:w-[40%] xl:w-[30%] border-l border-gray-200 bg-accent-light p-5 rounded-lg md:h-full overflow-y-auto">
+              <h3 className="font-semibold text-gray-900 mb-4">Vista previa</h3>
+              <div className="space-y-4">
+                {sections.map((section, index) => (
+                  <div key={index}>
+                    <h4 className="font-semibold">{section.title}</h4>
+                    <p className="text-sm whitespace-pre-line">{section.content}</p>
+                  </div>
+                ))}
+
+                {items.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold mb-2">Productos</h4>
+                    {items.map((item) => (
+                      <div
+                        key={item.productId}
+                        className="flex justify-between text-sm"
+                      >
+                        <span>
+                          {item.productName} x{item.quantity}
+                        </span>
+                        <span>
+                          ${(item.quantity * item.unitPrice).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center">
                   <p className="text-gray-600">Subtotal:</p>
                   <p className="font-medium">${subtotal.toFixed(2)}</p>
@@ -315,24 +435,14 @@ export default function QuoteForm({
                   <p className="text-gray-600">IVA (16%):</p>
                   <p className="font-medium">${ivaAmount.toFixed(2)}</p>
                 </div>
-                <div className="flex justify-between items-center border-t border-gray-200 my-2 pt-2">
+                <div className="flex justify-between items-center border-t border-gray-200 pt-2">
                   <h3 className="font-semibold text-gray-900">Total:</h3>
-                  <p className="font-bold text-lg text-gray-900">
-                    ${total.toFixed(2)}
-                  </p>
+                  <p className="font-bold text-lg text-gray-900">${total.toFixed(2)}</p>
                 </div>
               </div>
 
-              <Form.Item label="Nota" name="note" className="mb-4 ">
-                <TextArea
-                  placeholder="Condiciones comerciales, terminos de pago, etc."
-                  maxLength={300}
-                  rows={3}
-                />
-              </Form.Item>
-
               <Button
-                className="w-full"
+                className="w-full mt-4"
                 type="primary"
                 htmlType="submit"
                 loading={isLoading}

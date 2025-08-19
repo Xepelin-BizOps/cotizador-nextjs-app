@@ -13,9 +13,15 @@ export type PlainQuotationItem = Omit<QuotesWithRelations['items'][number], 'uni
     totalPrice: number;
 };
 
-export type PlainQuotesWithRelations = Omit<QuotesWithRelations, 'items' | 'totalAmount'> & {
+export interface QuoteSection {
+    title: string;
+    content: string;
+}
+
+export type PlainQuotesWithRelations = Omit<QuotesWithRelations, 'items' | 'totalAmount' | 'sections'> & {
     totalAmount: number;
     items: PlainQuotationItem[];
+    sections: QuoteSection[] | null;
 };
 
 
@@ -68,6 +74,7 @@ export type PlainQuotesDetails = Omit<
         unitPrice: number;
         totalPrice: number;
     })[];
+    sections: QuoteSection[] | null;
 };
 
 export interface ResponseDetails {

@@ -5,7 +5,7 @@ import { CreateQuoteDto, EditQuoteDto } from "@/schemas/quote/quote.dto";
 import { createQuotationSchema } from "@/schemas/quote/quote.schema";
 import { Prisma, QuotationStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import type { ResQuoteList } from "./quote-types";
+import type { ResQuoteList, QuoteSection } from "./quote-types";
 import { verifyToken } from "@/app/(sections)/auth/_fetures/action";
 
 export async function getQuotesList(
@@ -69,6 +69,7 @@ export async function getQuotesList(
         const plainQuotes = quotes.map((quote) => ({
             ...quote,
             totalAmount: quote.totalAmount.toNumber(),
+            sections: quote.sections as QuoteSection[] | null,
             items: quote.items.map((item) => ({
                 ...item,
                 totalPrice: item.totalPrice.toNumber(),
@@ -127,6 +128,7 @@ export async function getQuoteById(id: number) {
         const plainQuotation = {
             ...quotation,
             totalAmount: quotation.totalAmount.toNumber(),
+            sections: quotation.sections as QuoteSection[] | null,
             items: quotation.items.map((item) => ({
                 ...item,
                 unitPrice: item.unitPrice.toNumber(),
@@ -180,6 +182,7 @@ export const createQuote = async (data: CreateQuoteDto) => {
             data: {
                 ...parsed.data,
                 totalAmount, // Sin el iva
+                sections: parsed.data.sections as Prisma.JsonValue,
                 items: {
                     create: parsed.data.items.map(item => ({
                         productId: item.productId,
@@ -260,6 +263,7 @@ export const editQuote = async (data: EditQuoteDto, quoteId: number) => {
                 quotationDate: data.quotationDate,
                 clientId: data.clientId,
                 companyId: data.companyId,
+                sections: data.sections as Prisma.JsonValue,
                 totalAmount: data.items.reduce(
                     (acc, i) => acc + i.quantity * i.unitPrice,
                     0

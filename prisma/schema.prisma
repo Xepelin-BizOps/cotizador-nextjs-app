@@ -189,7 +189,7 @@ model Quotation {
     client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
     items QuotationItem[] // relación 1:N con cascade implícito (por prisma no hace falta nada más)
-
+    sections      Json?
     note          String?         @db.Text
     totalAmount   Decimal         @db.Decimal(10, 2)
     status        QuotationStatus @default(DRAFT)

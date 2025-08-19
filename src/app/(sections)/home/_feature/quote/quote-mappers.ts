@@ -16,5 +16,6 @@ export const mapQuoteListToFormValues = (quote: PlainQuotesWithRelations): EditQ
         unitPrice: Number(item.unitPrice),
     })),
     totalAmount: Number(quote.totalAmount),
-    note: quote.note || ""
+    note: quote.note || "",
+    sections: quote.sections || [],
 });
