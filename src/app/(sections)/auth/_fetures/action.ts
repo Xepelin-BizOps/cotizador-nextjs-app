@@ -97,7 +97,7 @@ export async function verifyToken() {
     }
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET) as unknown as ResVerify;
+        const decoded = jwt.verify(token!, JWT_SECRET) as unknown as ResVerify;
         return decoded;
     } catch {
         throw new Error("No autorizado - token inválido");

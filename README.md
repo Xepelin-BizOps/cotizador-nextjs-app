@@ -112,8 +112,16 @@ npm run dev
 | Variable       | Descripción                          |
 | -------------- | ------------------------------------ |
 | `DATABASE_URL` | URL de conexión a la base PostgreSQL |
+| `NEXT_PUBLIC_ALLOWED_ORIGINS` | Dominios permitidos para recibir `postMessage` |
+| `JWT_SECRET` | Clave usada para firmar y verificar tokens |
+| `ADMIN_EMAIL` | Correo del usuario administrador |
+| `ADMIN_PASSWORD` | Contraseña del usuario administrador |
 
 ---
+
+### Panel de administración
+
+Configura `ADMIN_EMAIL` y `ADMIN_PASSWORD` para habilitar el panel en `/admin`. Tras iniciar sesión se puede registrar nuevas compañías desde `/admin/companies`.
 
 ## 🐳 docker-compose.yml (opcional para desarrollo)
 
