@@ -89,19 +89,19 @@ export async function verifyToken() {
         }
     }
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('access_token')?.value;
+    // const cookieStore = await cookies();
+    // const token = cookieStore.get('access_token')?.value;
 
-    if (!token) {
-        throw new Error("No autorizado - token no encontrado. Válida tu sesión nuevamente");
-    }
+    // if (!token) {
+    //     throw new Error("No autorizado - token no encontrado. Válida tu sesión nuevamente");
+    // }
 
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET) as unknown as ResVerify;
-        return decoded;
-    } catch {
-        throw new Error("No autorizado - token inválido");
-    }
+    // try {
+    //     const decoded = jwt.verify(token, JWT_SECRET) as unknown as ResVerify;
+    //     return decoded;
+    // } catch {
+    //     throw new Error("No autorizado - token inválido");
+    // }
 
 }
 
