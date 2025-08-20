@@ -35,6 +35,14 @@ export const editQuotationItem = createQuotationItem.extend({
 
 export const createQuotationSchema = z.object({
     note: z.string().optional(),
+    sections: z
+        .array(
+            z.object({
+                title: z.string(),
+                content: z.string(),
+            })
+        )
+        .optional(),
     totalAmount: z
         .string()
         .or(z.number())
