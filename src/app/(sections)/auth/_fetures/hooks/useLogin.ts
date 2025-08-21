@@ -1,92 +1,101 @@
 "use client";
-import { TabName } from "@/app/constants/optionsSelects";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { authMe, login } from "../action";
 import { useAuthContext } from "@/app/hooks/useAuthContext";
-import { config } from "@/lib/config";
+import { authMe, login } from "../action";
 
+type Currency = { id: number; value: string };
+type UserData = { id: number; email: string; companyId: number; currency: Currency };
+type ResAuthMe = { success: boolean; message: string; data: UserData | null };
+type AuthMessage = { type?: string; token?: string };
 
-export default function useLogin() {
-    const router = useRouter();
-    const { setValue } = useAuthContext();
+function isAuthMessage(data: unknown): data is AuthMessage {
+  return typeof data === "object" && data !== null && ("token" in data || "type" in data);
+}
 
-    const [data, setData] = useState({
-        isLoading: false,
-        data: null,
-        message: "",
-        error: false,
-    });
+function getAllowedOrigins() {
+  const raw = process.env.NEXT_PUBLIC_ALLOWED_ORIGINS ?? "";
+  const list = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  const allowAll = list.includes("*");
+  return { list, allowAll };
+}
 
+type HookState = {
+  isLoading: boolean;
+  data: unknown;
+  message: string;
+  error: boolean;
+};
 
+type UseLoginReturn = HookState & {
+  setData: React.Dispatch<React.SetStateAction<HookState>>;
+};
 
-    useEffect(() => {
-        const handleMessage = async (event: MessageEvent) => {
-            // Validar el origen de donde vienen los datos
-            if (!config.NEXT_PUBLIC_ALLOWED_ORIGINS!.includes(event.origin)) {
-                console.warn("Origen no permitido:", event.origin);
-                return;
-            }
+export default function useLogin(): UseLoginReturn {
+  const router = useRouter();
+  const { setValue } = useAuthContext();
 
-            setData((prev) => ({ ...prev, isLoading: true }));
+  const [data, setData] = useState<HookState>({
+    isLoading: false,
+    data: null,
+    message: "",
+    error: false,
+  });
 
-            const { businessIdentifier, userEmail } = event.data || {};
+  useEffect(() => {
+    const { list: allowedOrigins, allowAll } = getAllowedOrigins();
 
-            if (!businessIdentifier || !userEmail) {
-                setData((prev) => ({
-                    ...prev,
-                    isLoading: false,
-                    error: true,
-                    message: "Faltan datos para validar la sesión",
-                }));
-                return;
-            }
+    const handleMessage = async (event: MessageEvent<unknown>) => {
+      const authMsg = isAuthMessage(event.data) ? event.data : undefined;
 
-            try {
-                const responseLogin = await login(businessIdentifier, userEmail);
-                console.log(responseLogin)
+      console.log("[useLogin] postMessage recibido", {
+        origin: event.origin,
+        allowAll,
+        allowedOrigins,
+        dataType: typeof event.data,
+        hasToken: !!(authMsg && typeof authMsg.token === "string"),
+        type: authMsg?.type,
+      });
 
-                if (!responseLogin.error) {
-                    const responseAuthMe = await authMe();
-                    // Seteamos los datos del user en el context
-                    if (responseAuthMe.success) {
-                        setValue(responseAuthMe.data!);
-                    }
+      if (!allowAll && !allowedOrigins.includes(event.origin)) {
+        console.warn("[useLogin] postMessage bloqueado por origen NO permitido", {
+          origin: event.origin,
+          allowedOrigins,
+        });
+        return;
+      }
 
-                    setData((prev) => ({
-                        ...prev,
-                        error: false,
-                        message: "Login exitoso",
-                    }));
+      if (!authMsg?.token) return;
+      const token = authMsg.token;
 
-                    router.replace(`/home?tab=${TabName.quote}`); // Redireccionar si todo fue bien
-                } else {
-                    setData((prev) => ({
-                        ...prev,
-                        error: true,
-                        message: responseLogin.message,
-                    }));
-                }
-            } catch {
-                setData((prev) => ({
-                    ...prev,
-                    isLoading: false,
-                    error: true,
-                    message: "Error interno al validar sesión",
-                }));
-            } finally {
-                setData((prev) => ({ ...prev, isLoading: false }));
-            }
-        };
+      try {
+        setData((s) => ({ ...s, isLoading: true, message: "" }));
 
-        window.addEventListener("message", handleMessage);
+        await login(token, event.origin);
 
-        return () => {
-            window.removeEventListener("message", handleMessage);
-        };
-    }, [router, setValue]);
+        const res: ResAuthMe = await authMe();
+        if (!res.success || !res.data) throw new Error("AuthMe sin datos");
 
-    return {
-        data,
+        // setValue espera al usuario (UserData)
+        setValue(res.data);
+
+        router.push("/home");
+      } catch {
+        setData((s) => ({
+          ...s,
+          error: true,
+          message: "No se pudo autenticar",
+          isLoading: false,
+        }));
+      } finally {
+        setData((s) => ({ ...s, isLoading: false }));
+      }
     };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [router, setValue]);
+
+  return { ...data, setData };
 }

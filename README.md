@@ -60,8 +60,8 @@ Ajusta los archivos:
 ### 1. Clonar el proyecto y configurar el entorno
 
 ```bash
-git clone https://github.com/Xepelin-BizOps/cotizador-nextjs-app.git
-cd cotizador-nextjs-app
+git https://github.com/xepelinapp/xepelin-prototype-global.git
+cd xepelin-prototype-global
 ```
 
 Renombra `env.template` a `.env` con la URL de tu base de datos local o externa:
@@ -82,7 +82,7 @@ npm install
 
 ### 3. (Opcional) Levantar PostgreSQL local con Docker
 
-Si no tenés una base, podés usar el siguiente `docker-compose.yml`:
+Si no tienes una base, podés usar el siguiente `docker-compose.yml`:
 
 ```bash
 docker-compose up -d
