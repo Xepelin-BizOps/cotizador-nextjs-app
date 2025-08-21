@@ -33,7 +33,7 @@ export default function useLogin() {
                     ...prev,
                     isLoading: false,
                     error: true,
-                    message: "Faltan datos",
+                    message: "Faltan datos para validar la sesión",
                 }));
                 return;
             }

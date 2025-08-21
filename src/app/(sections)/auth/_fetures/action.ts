@@ -78,30 +78,19 @@ export interface ResVerify extends PayloadData {
 }
 
 export async function verifyToken() {
-    // USER TEST
-    return {
-        id: 1,
-        email: "peep@corp.com",
-        companyId: 1,
-        currency: {
-            id: 1,
-            value: "MXN"
-        }
+    const cookieStore = await cookies();
+    const token = cookieStore.get('access_token')?.value;
+
+    if (!token) {
+        throw new Error("No autorizado - token no encontrado. Válida tu sesión nuevamente");
     }
 
-    // const cookieStore = await cookies();
-    // const token = cookieStore.get('access_token')?.value;
-
-    // if (!token) {
-    //     throw new Error("No autorizado - token no encontrado. Válida tu sesión nuevamente");
-    // }
-
-    // try {
-    //     const decoded = jwt.verify(token, JWT_SECRET) as unknown as ResVerify;
-    //     return decoded;
-    // } catch {
-    //     throw new Error("No autorizado - token inválido");
-    // }
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET) as unknown as ResVerify;
+        return decoded;
+    } catch {
+        throw new Error("No autorizado - token inválido");
+    }
 
 }
 
