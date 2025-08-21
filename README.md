@@ -68,6 +68,10 @@ Renombra `env.template` a `.env` con la URL de tu base de datos local o externa:
 
 ```env
 DATABASE_URL=postgresql://user:pass@localhost:5432/cotizador_dev
+
+# Origenes que pueden mandar postMessage ej: http://localhost:5173,https://miapp.com
+NEXT_PUBLIC_ALLOWED_ORIGINS=
+JWT_SECRET=
 ```
 
 ### 2. Instalar dependencias
@@ -109,9 +113,11 @@ npm run dev
 
 ## 🧳 Variables de entorno necesarias
 
-| Variable       | Descripción                          |
-| -------------- | ------------------------------------ |
-| `DATABASE_URL` | URL de conexión a la base PostgreSQL |
+| Variable                      | Descripción                                    |
+| ----------------------------- | ---------------------------------------------- |
+| `DATABASE_URL`                | URL de conexión a la base PostgreSQL           |
+| `NEXT_PUBLIC_ALLOWED_ORIGINS` | URL de donde se permienten recibir postMessage |
+| `JWT_SECRET`                  | JWT secret                                     |
 
 ---
 
