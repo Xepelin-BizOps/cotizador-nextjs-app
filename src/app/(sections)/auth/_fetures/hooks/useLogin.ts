@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { authMe, login } from "../action";
 import { useAuthContext } from "@/app/hooks/useAuthContext";
+import { config } from "@/lib/config";
+
 
 export default function useLogin() {
     const router = useRouter();
@@ -16,10 +18,12 @@ export default function useLogin() {
         error: false,
     });
 
+
+
     useEffect(() => {
         const handleMessage = async (event: MessageEvent) => {
             // Validar el origen de donde vienen los datos
-            if (!process.env.NEXT_PUBLIC_ALLOWED_ORIGINS!.includes(event.origin)) {
+            if (!config.NEXT_PUBLIC_ALLOWED_ORIGINS!.includes(event.origin)) {
                 console.warn("Origen no permitido:", event.origin);
                 return;
             }

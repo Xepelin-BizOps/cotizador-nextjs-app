@@ -2,8 +2,9 @@
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import jwt from 'jsonwebtoken';
+import { config } from "@/lib/config";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const JWT_SECRET = config.JWT_SECRET;
 
 export const login = async (businessIdentifier: string, userEmail: string) => {
 
