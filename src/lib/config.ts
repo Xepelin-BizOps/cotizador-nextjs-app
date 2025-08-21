@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 interface Config {
     DATABASE_URL: string
     JWT_SECRET: string
